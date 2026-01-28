@@ -1,16 +1,27 @@
 import axios from 'axios';
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utils/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../utils/constants';
 
 const Login = () => {
-    const [emailId, setEmailId] = useState("rohit@gmail.com");
-    const [password, setPassword] = useState("rohit@123");
+    const [email, setEmail] = useState("rohitsi88@gmail.com");
+    const [password, setPassword] = useState("rohit@9198");
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
 const handleLogin = async() =>{
-  try{const res = await axios.post("http://localhost:7777/login",{
-    emailId,
+  try{const res = await axios.post(BASE_URL + "/login",
+    {
+    email,
     password,
-   });}
-   catch(err){
+   },
+   {withCredentials: true}
+  );
+   dispatch(addUser(res.data));
+   return navigate("/");
+  }catch(err){
     console.error(err);
    }
 };
@@ -21,10 +32,10 @@ const handleLogin = async() =>{
     <h2 className="card-title justify-center">Login</h2>
     <div>
         <fieldset className="fieldset my-2">
-        <legend className="label-text">Email ID</legend>
-        <input type="text" value={emailId} placeholder="Type here" 
+        <legend className="label-text">Email</legend>
+        <input type="text" value={email} placeholder="Type here" 
         className="input input-bordered w-full max-w-xs"
-        onChange={(e) => setEmailId(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}
         />
         </fieldset>
     </div>
